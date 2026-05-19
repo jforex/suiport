@@ -1,0 +1,17 @@
+# Env / secrets
+.env
+.env.local
+.env*.local
+
+# Node
+node_modules/
+.next/
+out/
+dist/
+build/
+
+# Move
+contracts/build/
+
+# macOS
+.DS_Store
