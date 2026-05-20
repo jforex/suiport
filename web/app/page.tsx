@@ -2,6 +2,7 @@
 
 import { ConnectButton, useCurrentAccount } from "@mysten/dapp-kit";
 import { MintContainerForm } from "./components/MintContainerForm";
+import { DocumentPanel } from "./components/DocumentPanel";
 
 export default function Home() {
   const account = useCurrentAccount();
@@ -32,6 +33,15 @@ export default function Home() {
             until you transfer it to a carrier.
           </p>
           <MintContainerForm />
+        </section>
+
+        <section className="mt-6 rounded-2xl border border-neutral-800 bg-neutral-900/40 p-8">
+          <h2 className="text-lg font-medium mb-1">Documents</h2>
+          <p className="text-sm text-neutral-400 mb-6">
+            Upload a Bill of Lading, customs form, or inspection photo to Walrus,
+            then anchor it to a container on-chain.
+          </p>
+          <DocumentPanel />
         </section>
       </div>
     </main>
