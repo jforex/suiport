@@ -66,11 +66,3 @@ export function useContainers() {
     },
   });
 }
-
-export const STATUS_LABELS: Record<number, string> = {
-  0: "Registered",
-  1: "In Transit",
-  2: "At Port",
-  3: "Cleared",
-  4: "Delivered",
-};

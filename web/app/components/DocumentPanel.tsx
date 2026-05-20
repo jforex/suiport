@@ -7,7 +7,8 @@ import {
 } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { uploadToWalrus, walrusBlobUrl } from "../lib/walrus";
-import { useContainers, STATUS_LABELS } from "../lib/useContainers";
+import { useContainers } from "../lib/useContainers";
+import { STATUS_LABELS } from "../lib/format";
 
 const PACKAGE_ID = process.env.NEXT_PUBLIC_PACKAGE_ID!;
 

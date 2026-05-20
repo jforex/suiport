@@ -1,49 +1,34 @@
 "use client";
 
-import { ConnectButton, useCurrentAccount } from "@mysten/dapp-kit";
-import { MintContainerForm } from "./components/MintContainerForm";
-import { DocumentPanel } from "./components/DocumentPanel";
+import Link from "next/link";
+import { useCurrentAccount } from "@mysten/dapp-kit";
+import { Dashboard } from "./components/Dashboard";
 
 export default function Home() {
   const account = useCurrentAccount();
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-neutral-100">
-      <div className="mx-auto max-w-3xl px-6 py-16">
-        <header className="flex items-center justify-between mb-12">
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight">SuiPort</h1>
-            <p className="text-sm text-neutral-400 mt-1">
-              Verifiable document custody for global trade
-            </p>
-          </div>
-          <ConnectButton />
-        </header>
-
+    <div className="page-enter mx-auto max-w-5xl px-6 py-10">
+      <div className="mb-8 flex items-end justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Container manifest
+          </h1>
+          <p className="mt-1 text-sm text-neutral-400">
+            Verifiable document custody for global trade.
+          </p>
+        </div>
         {account && (
-          <div className="mb-6 text-xs text-neutral-500 font-mono">
-            {account.address.slice(0, 10)}…{account.address.slice(-6)} · testnet
-          </div>
+          <Link
+            href="/mint"
+            className="rounded-md bg-amber-500 px-4 py-2 text-sm font-medium text-black transition hover:bg-amber-400"
+          >
+            + New container
+          </Link>
         )}
-
-        <section className="rounded-2xl border border-neutral-800 bg-neutral-900/40 p-8">
-          <h2 className="text-lg font-medium mb-1">Mint a container</h2>
-          <p className="text-sm text-neutral-400 mb-6">
-            Create a digital twin of a shipping container. You'll own it on-chain
-            until you transfer it to a carrier.
-          </p>
-          <MintContainerForm />
-        </section>
-
-        <section className="mt-6 rounded-2xl border border-neutral-800 bg-neutral-900/40 p-8">
-          <h2 className="text-lg font-medium mb-1">Documents</h2>
-          <p className="text-sm text-neutral-400 mb-6">
-            Upload a Bill of Lading, customs form, or inspection photo to Walrus,
-            then anchor it to a container on-chain.
-          </p>
-          <DocumentPanel />
-        </section>
       </div>
-    </main>
+
+      <Dashboard />
+    </div>
   );
 }
