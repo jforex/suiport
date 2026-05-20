@@ -14,8 +14,8 @@ import "@mysten/dapp-kit/dist/index.css";
 
 // Configure the networks we support. We're starting on testnet.
 const { networkConfig } = createNetworkConfig({
-  testnet: { url: getJsonRpcFullnodeUrl("testnet") },
-  mainnet: { url: getJsonRpcFullnodeUrl("mainnet") },
+   testnet: { url: getJsonRpcFullnodeUrl("testnet"), network: "testnet" },
+   mainnet: { url: getJsonRpcFullnodeUrl("mainnet"), network: "mainnet" },
 });
 
 export function Providers({ children }: { children: ReactNode }) {
