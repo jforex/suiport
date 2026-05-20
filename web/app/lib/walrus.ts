@@ -21,11 +21,24 @@ export async function uploadToWalrus(
   data: Blob | Uint8Array | ArrayBuffer,
   epochs = 5,
 ): Promise<WalrusUploadResult> {
-  const url = `${PUBLISHER}/v1/blobs?epochs=${epochs}`;
+
+const url = `${PUBLISHER}/v1/blobs?epochs=${epochs}`;
+
+  // Normalize to a Blob the fetch body accepts. Copy into a fresh
+  // Uint8Array so the underlying buffer is a plain ArrayBuffer (not
+  // SharedArrayBuffer), which keeps strict TypeScript happy.
+  let body: Blob;
+  if (data instanceof Blob) {
+    body = data;
+  } else if (data instanceof ArrayBuffer) {
+    body = new Blob([new Uint8Array(data)]);
+  } else {
+    body = new Blob([new Uint8Array(data)]);
+  }
 
   const res = await fetch(url, {
     method: "PUT",
-    body: data instanceof Blob ? data : new Blob([data]),
+    body,
   });
 
   if (!res.ok) {
