@@ -3,8 +3,9 @@
 import { useCurrentAccount, useSuiClient } from "@mysten/dapp-kit";
 import { useQuery } from "@tanstack/react-query";
 
-const PACKAGE_ID = process.env.NEXT_PUBLIC_PACKAGE_ID!;
-const CONTAINER_TYPE = `${PACKAGE_ID}::container::Container`;
+// Type identity is permanent — it uses the ORIGINAL package ID even after upgrades.
+const ORIGINAL_PACKAGE_ID = process.env.NEXT_PUBLIC_ORIGINAL_PACKAGE_ID!;
+const CONTAINER_TYPE = `${ORIGINAL_PACKAGE_ID}::container::Container`;
 
 export type ContainerFields = {
   objectId: string;
