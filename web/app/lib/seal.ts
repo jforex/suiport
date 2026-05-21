@@ -1,7 +1,6 @@
 "use client";
 
 import { SealClient, SessionKey } from "@mysten/seal";
-import { SuiClient } from "@mysten/sui/client";
 import { toHex, fromHex } from "@mysten/sui/utils";
 
 export const SEAL_THRESHOLD = 1;
@@ -13,7 +12,10 @@ const TESTNET_KEY_SERVERS = [
   "0xf5d14a81a982144ae441cd7d64b09027f116a468bd36e7eca494f750591623c8",
 ];
 
-export function makeSealClient(suiClient: SuiClient): SealClient {
+// We accept the SuiClient instance from useSuiClient() without importing
+// its type (the export path differs across SDK versions). `unknown` keeps
+// the build happy; the Seal SDK validates the client at runtime.
+export function makeSealClient(suiClient: unknown): SealClient {
   return new SealClient({
     suiClient: suiClient as never,
     serverConfigs: TESTNET_KEY_SERVERS.map((id) => ({
