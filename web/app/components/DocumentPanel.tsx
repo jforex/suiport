@@ -179,8 +179,8 @@ export function DocumentPanel() {
                 Registry active — documents will be encrypted
               </p>
               <p className="mt-1 text-neutral-400">
-                {registry.allowlist.length} address
-                {registry.allowlist.length === 1 ? "" : "es"} can decrypt
+                {registry.activeMembers.length} address
+                {registry.activeMembers.length === 1 ? "" : "es"} can decrypt
               </p>
             </div>
           ) : (

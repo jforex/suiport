@@ -1,5 +1,6 @@
 "use client";
 
+import { AgentManager } from "../../components/AgentManager";
 import { use, useState } from "react";
 import Link from "next/link";
 import { useCurrentAccount } from "@mysten/dapp-kit";
@@ -26,7 +27,7 @@ export default function ContainerDetailPage({
   const { id } = use(params);
   const account = useCurrentAccount();
   const { container, owner, isLoading, error, refetch } = useContainer(id);
-  const { data: registry } = useRegistryForContainer(id);
+  const { data: registry, refetch: refetchRegistry } = useRegistryForContainer(id);
   const [copied, setCopied] = useState(false);
 
   const isOwner = !!account && !!owner && account.address === owner;
@@ -176,6 +177,17 @@ export default function ContainerDetailPage({
           />
         </div>
       </div>
+
+
+      {/* Access control */}
+      {registry && (
+        <div className="mt-6 rounded-lg border border-neutral-800 bg-neutral-900/40 p-5">
+          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+            Document access
+          </h2>
+          <AgentManager registry={registry} onChanged={refetchRegistry} />
+        </div>
+      )}
 
       {/* Documents */}
       <div className="mt-6 rounded-lg border border-neutral-800 bg-neutral-900/40 p-5">
