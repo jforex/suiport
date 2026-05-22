@@ -4,7 +4,9 @@ import { use, useState } from "react";
 import Link from "next/link";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useContainer } from "../../lib/useContainer";
+import { useRegistryForContainer } from "../../lib/useRegistry";
 import { ContainerActions } from "../../components/ContainerActions";
+import { DecryptButton } from "../../components/DecryptButton";
 import {
   STATUS_LABELS,
   STATUS_STYLES,
@@ -24,6 +26,7 @@ export default function ContainerDetailPage({
   const { id } = use(params);
   const account = useCurrentAccount();
   const { container, owner, isLoading, error, refetch } = useContainer(id);
+  const { data: registry } = useRegistryForContainer(id);
   const [copied, setCopied] = useState(false);
 
   const isOwner = !!account && !!owner && account.address === owner;
@@ -133,9 +136,7 @@ export default function ContainerDetailPage({
             <Row label="Owner">
               <span className="font-mono">
                 {owner ? shortAddr(owner) : "—"}
-                {isOwner && (
-                  <span className="ml-1 text-amber-500">(you)</span>
-                )}
+                {isOwner && <span className="ml-1 text-amber-500">(you)</span>}
               </span>
             </Row>
             <Row label="Object ID">
@@ -147,11 +148,11 @@ export default function ContainerDetailPage({
                 }}
                 className="font-mono text-neutral-300 hover:text-white"
               >
-                {shortId(container.objectId)} {copied ? "✓" : "�copy"}
+                {shortId(container.objectId)} {copied ? "✓" : "copy"}
               </button>
             </Row>
           </dl>
-          
+
           <a
             href={`https://suiscan.xyz/testnet/object/${container.objectId}`}
             target="_blank"
@@ -178,9 +179,16 @@ export default function ContainerDetailPage({
 
       {/* Documents */}
       <div className="mt-6 rounded-lg border border-neutral-800 bg-neutral-900/40 p-5">
-        <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-neutral-500">
-          Documents ({container.documentBlobIds.length})
-        </h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+            Documents ({container.documentBlobIds.length})
+          </h2>
+          {registry && (
+            <span className="rounded border border-emerald-900/60 bg-emerald-950/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-emerald-400">
+              Encrypted · Seal
+            </span>
+          )}
+        </div>
         {container.documentBlobIds.length === 0 ? (
           <p className="text-sm text-neutral-500">
             No documents attached yet.{" "}
@@ -201,15 +209,25 @@ export default function ContainerDetailPage({
                     {blobId}
                   </p>
                 </div>
-                
-                <a
-                  href={walrusBlobUrl(blobId)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="ml-3 shrink-0 rounded bg-neutral-800 px-3 py-1.5 text-xs text-neutral-200 hover:bg-neutral-700"
-                >
-                  View ↗
-                </a>
+
+                <div className="ml-3 shrink-0">
+                  {registry ? (
+                    <DecryptButton
+                      blobId={blobId}
+                      registryId={registry.registryId}
+                    />
+                  ) : (
+                    
+                    <a
+                      href={walrusBlobUrl(blobId)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded bg-neutral-800 px-3 py-1.5 text-xs text-neutral-200 hover:bg-neutral-700"
+                    >
+                      View ↗
+                    </a>
+                  )}
+                </div>
               </li>
             ))}
           </ul>

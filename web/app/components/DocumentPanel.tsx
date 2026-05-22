@@ -10,7 +10,7 @@ import { Transaction } from "@mysten/sui/transactions";
 import { uploadToWalrus } from "../lib/walrus";
 import { useContainers } from "../lib/useContainers";
 import { useRegistryForContainer } from "../lib/useRegistry";
-import { makeSealClient, sealEncrypt } from "../lib/seal";
+import { makeSealClient, sealEncrypt, packWithMetadata } from "../lib/seal";
 import { STATUS_LABELS } from "../lib/format";
 
 const PACKAGE_ID = process.env.NEXT_PUBLIC_PACKAGE_ID!;
@@ -52,7 +52,6 @@ export function DocumentPanel() {
         onSuccess: async ({ digest }) => {
           await suiClient.waitForTransaction({ digest });
           setBusy(null);
-          // Give the indexer a moment, then refetch.
           setTimeout(() => refetchRegistry(), 1500);
         },
         onError: (err) => {
@@ -70,13 +69,16 @@ export function DocumentPanel() {
     setBusy("upload");
 
     try {
-      // 1. Read file bytes
+      // 1. Read file bytes and pack with name + MIME so they survive decryption
       setStatus("Reading file…");
-      const buf = new Uint8Array(await file.arrayBuffer());
+      const rawBytes = new Uint8Array(await file.arrayBuffer());
+      const buf = packWithMetadata(
+        rawBytes,
+        file.name,
+        file.type || "application/octet-stream",
+      );
 
-      // 2. Encrypt with Seal against this container's registry.
-      // Seal requires the ORIGINAL package ID (the identity namespace),
-      // not the upgraded one.
+      // 2. Encrypt with Seal (uses ORIGINAL package ID as identity namespace)
       setStatus("Encrypting with Seal…");
       const sealClient = makeSealClient(suiClient);
       const { encryptedBytes } = await sealEncrypt(
